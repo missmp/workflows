@@ -22,7 +22,6 @@ on:
 jobs:
   Deploy:
     runs-on: ubuntu-latest-l
-    needs: Build
     outputs:
       output1: ${{ steps.setversion.outputs.version }}
     steps:
