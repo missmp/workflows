@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       IMAGE:
+        type: string
         required: true
     secrets:
       GH_TOKEN:

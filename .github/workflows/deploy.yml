@@ -4,12 +4,16 @@ on:
   workflow_call:
     inputs:
       IMAGE:
+        type: string
         required: true
       SERVICE_NAME:
+        type: string
         required: true
       ENV:
+        type: string
         required: true
       DEPLOYMENT_FILE:
+        type: string
         required: true
     secrets:
       GH_TOKEN:
