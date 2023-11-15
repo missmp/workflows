@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      IMAGE:
+        required: true
+    secrets:
+      GH_TOKEN:
+        required: true
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest-l
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: missmp
+          password: ${{ secrets.GH_TOKEN }}
+      - name: Run build
+        run: |
+          docker buildx build -t ${{ inputs.IMAGE }}:$(git describe --tags) .
+          docker push ${IMAGE}:$(git describe --tags)

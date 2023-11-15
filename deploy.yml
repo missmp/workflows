@@ -1,0 +1,48 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      IMAGE:
+        required: true
+      SERVICE_NAME:
+        required: true
+      ENV:
+        required: true
+      DEPLOYMENT_FILE:
+        required: true
+    secrets:
+      GH_TOKEN:
+        required: true
+
+  Deploy:
+    runs-on: ubuntu-latest-l
+    needs: Build
+    outputs:
+      output1: ${{ steps.setversion.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: echo "TAG=`git describe --tags`" >> $GITHUB_ENV
+      - name: Checkout argocd repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: missmp/argocd
+          fetch-depth: 0
+      - name: Update image tag
+        run: |
+          sed -i -e 's|image: .*|image: '${{ inputs.IMAGE }}:${TAG}'|g' ${{ inputs.DEPLOYMENT_FILE }}
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update ${{ inputs.SERVICE_NAME }} in environment ${{ inputs.ENV }} to version ${{ env.TAG }}"
+          commit_user_email: argocd@missmp.eu
+          commit_author: argocd autobot <argocd@missmp.eu>
+          branch: main
+          file_pattern: "*.yaml"
+          repository: .
+          commit_user_name: ArgoCD
+      - run: echo $TAG >> $GITHUB_STEP_SUMMARY
+      - id: setversion
+        run: echo "version=${TAG}" >> $GITHUB_OUTPUT
