@@ -3,7 +3,7 @@ on:
     inputs:
       IMAGE:
         type: string
-        required: true
+        default: "ghcr.io/missmp/${{ github.event.repository.name }}"
 
 jobs:
   Build:
