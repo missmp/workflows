@@ -3,14 +3,14 @@ on:
     inputs:
       IMAGE:
         type: string
-        required: true
+        default: "ghcr.io/missmp/${{ github.event.repository.name }}"
       SERVICE_NAME:
+        type: string
+        default: "${{ github.event.repository.name }}"
+      DEPLOYMENT_FILE:
         type: string
         required: true
       ENV:
-        type: string
-        required: true
-      DEPLOYMENT_FILE:
         type: string
         required: true
     secrets:
