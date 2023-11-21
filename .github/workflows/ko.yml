@@ -13,4 +13,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ko-build/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: ${{ inputs.IMAGE }}
       - run: ko build -t $(git describe --tags)
