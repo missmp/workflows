@@ -16,6 +16,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       USERNAME: ${{ github.actor }}
+      KO_DOCKER_REPO: ${{ inputs.IMAGE }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,4 +24,4 @@ jobs:
       - uses: ko-build/setup-ko@v0.6
       - run: |
           echo "${GH_TOKEN}" | ko login ghcr.io --username ${USERNAME} --password-stdin
-          ko build -t $(git describe --tags) ${{ inputs.BUILD_PATH }}
+          ko build --bare -t $(git describe --tags) ${{ inputs.BUILD_PATH }}
