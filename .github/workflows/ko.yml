@@ -19,5 +19,5 @@ jobs:
           fetch-depth: 0
       - uses: ko-build/setup-ko@v0.6
       - run: |
-          # echo "${GH_TOKEN}" | ko login https://ghcr.io --username ${USERNAME} --password-stdin
+          echo "${GH_TOKEN}" | ko login ghcr.io --username ${USERNAME} --password-stdin
           ko build -t $(git describe --tags)
