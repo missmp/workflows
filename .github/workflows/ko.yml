@@ -4,13 +4,20 @@ on:
       IMAGE:
         type: string
         default: "ghcr.io/missmp/${{ github.event.repository.name }}"
-
+    secrets:
+      GH_TOKEN:
+        required: true
 jobs:
   Build:
     runs-on: ubuntu-latest-l
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      USERNAME: ${{ github.actor }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: ko-build/setup-ko@v0.6
-      - run: ko build -t $(git describe --tags)
+      - run: |
+          echo "${GH_TOKEN}" | ko login https://ghcr.io --username ${USERNAME} --password-stdin
+          ko build -t $(git describe --tags)
